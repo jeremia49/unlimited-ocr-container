@@ -12,7 +12,7 @@ services:
     # Published on loopback only. vLLM has no auth by default; set VLLM_API_KEY
     # and change this to 0.0.0.0:8000 only behind a TLS-terminating proxy.
     ports:
-       - "8000"
+       - "127.0.0.1:5000:8000"
     # Weights (6.67 GB) live here. Reuse an existing host cache to avoid
     # re-downloading: replace with ~/.cache/huggingface:/models
     volumes:
@@ -34,12 +34,7 @@ services:
               capabilities: [gpu]
     restart: unless-stopped
     stop_grace_period: 60s
-    networks:
-      - shared-net
 
 volumes:
   hf-cache:
 
-networks:
-  shared-net:
-    external: true
