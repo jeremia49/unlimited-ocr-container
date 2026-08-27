@@ -11,8 +11,8 @@ services:
     image: unlimited-ocr-vllm:local
     # Published on loopback only. vLLM has no auth by default; set VLLM_API_KEY
     # and change this to 0.0.0.0:8000 only behind a TLS-terminating proxy.
-    # ports:
-    #   - "127.0.0.1:8000:8000"
+    ports:
+       - "8000"
     # Weights (6.67 GB) live here. Reuse an existing host cache to avoid
     # re-downloading: replace with ~/.cache/huggingface:/models
     volumes:
