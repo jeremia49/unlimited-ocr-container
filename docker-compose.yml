@@ -9,10 +9,16 @@ services:
         BASE_IMAGE: vllm/vllm-openai:unlimited-ocr
         BAKE_MODEL: "false"
     image: unlimited-ocr-vllm:local
-    # Published on loopback only. vLLM has no auth by default; set VLLM_API_KEY
-    # and change this to 0.0.0.0:8000 only behind a TLS-terminating proxy.
+    # Published on loopback for host tooling (ocr_client.py, curl). vLLM has no
+    # auth by default; change to 0.0.0.0:8000 only behind a TLS-terminating
+    # proxy. Containers reach port 8000 over `ocr-net` and ignore this mapping.
     ports:
        - "127.0.0.1:5000:8000"
+    # Shared with sibling compose projects (e.g. ../pdf2md), which join it as
+    # `external: true`. Fixed `name:` so it is not prefixed with this project's
+    # name and stays referenceable from the outside.
+    networks:
+      - ocr-net
     # Weights (6.67 GB) live here. Reuse an existing host cache to avoid
     # re-downloading: replace with ~/.cache/huggingface:/models
     volumes:
@@ -38,3 +44,6 @@ services:
 volumes:
   hf-cache:
 
+networks:
+  ocr-net:
+    name: ocr-net
