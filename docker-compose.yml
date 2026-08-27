@@ -1,0 +1,39 @@
+services:
+  unlimited-ocr:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Hopper (H100/H800) needs the CUDA 12.9 image:
+        #   BASE_IMAGE: vllm/vllm-openai:unlimited-ocr-cu129
+        BASE_IMAGE: vllm/vllm-openai:unlimited-ocr
+        BAKE_MODEL: "false"
+    image: unlimited-ocr-vllm:local
+    # Published on loopback only. vLLM has no auth by default; set VLLM_API_KEY
+    # and change this to 0.0.0.0:8000 only behind a TLS-terminating proxy.
+    ports:
+      - "127.0.0.1:8000:8000"
+    # Weights (6.67 GB) live here. Reuse an existing host cache to avoid
+    # re-downloading: replace with ~/.cache/huggingface:/models
+    volumes:
+      - hf-cache:/models
+    environment:
+      TENSOR_PARALLEL_SIZE: "1"      # must divide num_attention_heads=10
+      GPU_MEMORY_UTILIZATION: "0.85"
+      MAX_MODEL_LEN: "32768"
+      HF_TOKEN: "${HF_TOKEN:-}"      # only needed for gated repos
+      VLLM_API_KEY: "${VLLM_API_KEY:-}"
+    # PyTorch uses /dev/shm for IPC; the 64 MB default causes bus errors.
+    ipc: host
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+    stop_grace_period: 60s
+
+volumes:
+  hf-cache:
