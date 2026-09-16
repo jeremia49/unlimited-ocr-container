@@ -13,7 +13,7 @@ services:
     # auth by default; change to 0.0.0.0:8000 only behind a TLS-terminating
     # proxy. Containers reach port 8000 over `ocr-net` and ignore this mapping.
     ports:
-       - "127.0.0.1:5000:8000"
+       - "0.0.0.0:5000:8000"
     # Shared with sibling compose projects (e.g. ../pdf2md), which join it as
     # `external: true`. Fixed `name:` so it is not prefixed with this project's
     # name and stays referenceable from the outside.
