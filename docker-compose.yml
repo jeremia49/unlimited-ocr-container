@@ -25,8 +25,8 @@ services:
       - hf-cache:/models
     environment:
       TENSOR_PARALLEL_SIZE: "1"      # must divide num_attention_heads=10
-      GPU_MEMORY_UTILIZATION: "0.85"
-      MAX_MODEL_LEN: "32768"
+      GPU_MEMORY_UTILIZATION: "0.25"
+      MAX_MODEL_LEN: "8192"
       HF_TOKEN: "${HF_TOKEN:-}"      # only needed for gated repos
       VLLM_API_KEY: "${VLLM_API_KEY:-}"
     # PyTorch uses /dev/shm for IPC; the 64 MB default causes bus errors.
