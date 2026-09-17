@@ -42,6 +42,7 @@ args=(
     --tensor-parallel-size "${TENSOR_PARALLEL_SIZE}"
     --gpu-memory-utilization "${GPU_MEMORY_UTILIZATION}"
     --max-model-len "${MAX_MODEL_LEN}"
+    --max-num-batched-tokens 16384
 )
 
 # --revision only resolves against the hub; a local directory has none.
