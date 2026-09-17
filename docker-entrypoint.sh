@@ -10,6 +10,7 @@ PORT="${PORT:-8000}"
 TENSOR_PARALLEL_SIZE="${TENSOR_PARALLEL_SIZE:-1}"
 GPU_MEMORY_UTILIZATION="${GPU_MEMORY_UTILIZATION:-0.85}"
 MAX_MODEL_LEN="${MAX_MODEL_LEN:-32768}"
+MAX_BATCHED_TOK="${MAX_BATCHED_TOK:-16384}"
 
 # num_attention_heads = 10 in this checkpoint, so vLLM only accepts a TP size
 # that divides 10. Fail fast with a clear message instead of a pydantic
@@ -42,7 +43,7 @@ args=(
     --tensor-parallel-size "${TENSOR_PARALLEL_SIZE}"
     --gpu-memory-utilization "${GPU_MEMORY_UTILIZATION}"
     --max-model-len "${MAX_MODEL_LEN}"
-    --max-num-batched-tokens 16384
+    --max-num-batched-tokens "${MAX_BATCHED_TOK}"
 )
 
 # --revision only resolves against the hub; a local directory has none.
