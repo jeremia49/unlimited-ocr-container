@@ -61,7 +61,10 @@ RUN --mount=type=secret,id=hf_token,required=false \
     fi
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod 0755 /usr/local/bin/docker-entrypoint.sh
+# Strip CR defensively: a CRLF checkout on Windows breaks the shebang
+# (/usr/bin/env: 'bash\r': No such file or directory) inside the container.
+RUN sed -i 's/\r$//' /usr/local/bin/docker-entrypoint.sh \
+    && chmod 0755 /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 8000
 
